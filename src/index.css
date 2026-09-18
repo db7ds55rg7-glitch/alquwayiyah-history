@@ -1,0 +1,324 @@
+@import url("https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap");
+
+:root {
+  --bg: #07060a;
+  --sand: #cda772;
+  --gold: #e8c98a;
+  --copper: #b9793f;
+  --text: #f1e9da;
+  --text-dim: #c9bfae;
+  font-family: "Tajawal", system-ui, sans-serif;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  overscroll-behavior-y: none;
+}
+
+#root {
+  position: relative;
+}
+
+.app-root {
+  position: relative;
+  width: 100%;
+}
+
+/* ===== طبقة السينما (Canvas + نصوص + واجهة) ===== */
+.cinematic-layer {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 10;
+  transition: opacity 0.2s linear;
+}
+
+.cinematic-layer canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* ===== عمود التمرير (طوله فقط) ===== */
+.scroll-stage {
+  position: relative;
+  width: 100%;
+  z-index: 1;
+}
+
+/* ===== النصوص فوق المشهد ===== */
+.caption-layer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  pointer-events: none;
+  padding-bottom: 12vh;
+}
+
+.caption-block {
+  position: absolute;
+  max-width: min(640px, 88vw);
+  text-align: center;
+  padding: 1.4rem 1.8rem;
+  will-change: opacity, transform;
+}
+
+.caption-era {
+  display: inline-block;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  color: var(--gold);
+  border: 1px solid rgba(232, 201, 138, 0.4);
+  border-radius: 999px;
+  padding: 0.25rem 0.9rem;
+  margin-bottom: 0.8rem;
+  background: rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(6px);
+}
+
+.caption-title {
+  font-size: clamp(1.8rem, 5vw, 3.4rem);
+  font-weight: 900;
+  margin: 0 0 0.6rem;
+  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.8);
+  letter-spacing: 0.01em;
+}
+
+.caption-line {
+  font-size: clamp(0.95rem, 1.6vw, 1.25rem);
+  line-height: 1.9;
+  color: var(--text-dim);
+  margin: 0.25rem 0;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.85);
+}
+
+.caption-note {
+  display: block;
+  margin-top: 0.9rem;
+  font-size: 0.72rem;
+  color: rgba(241, 233, 218, 0.55);
+  font-style: normal;
+}
+
+/* ===== شريط التقدم وزر الصوت ===== */
+.chrome {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 30;
+  padding: 0.9rem clamp(1rem, 4vw, 2.5rem);
+  pointer-events: none;
+}
+
+.chrome-progress-track {
+  height: 2px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 0.7rem;
+}
+
+.chrome-progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--copper), var(--gold));
+}
+
+.chrome-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.chrome-chapter {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  letter-spacing: 0.02em;
+  min-height: 1.2em;
+}
+
+.chrome-audio-btn {
+  pointer-events: auto;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(232, 201, 138, 0.35);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.78rem;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.chrome-audio-btn:hover {
+  background: rgba(232, 201, 138, 0.15);
+  border-color: var(--gold);
+}
+
+/* ===== شاشة التحميل ===== */
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: #030203;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  transition: opacity 0.55s ease;
+}
+
+.loading-screen.fading {
+  opacity: 0;
+}
+
+.loading-inner {
+  text-align: center;
+  width: min(360px, 80vw);
+}
+
+.loading-title {
+  font-size: 2.2rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  color: var(--gold);
+  margin-bottom: 1.1rem;
+  opacity: 0.95;
+}
+
+.loading-tip {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin-bottom: 1.4rem;
+  min-height: 1.4em;
+}
+
+.loading-bar-track {
+  height: 2px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+}
+
+.loading-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--copper), var(--gold));
+  transition: width 0.15s linear;
+}
+
+.loading-pct {
+  margin-top: 0.6rem;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  direction: ltr;
+}
+
+/* ===== دبابيس الخريطة وخط الزمن (Html من drei) ===== */
+.map-pin,
+.timeline-pin {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  white-space: nowrap;
+  color: var(--text);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
+  font-size: 0.85rem;
+}
+
+.map-pin-title {
+  font-weight: 700;
+}
+
+.map-pin-sub {
+  font-size: 0.7rem;
+  color: var(--gold);
+}
+
+.timeline-pin-era {
+  font-size: 0.65rem;
+  color: var(--gold);
+}
+
+.timeline-pin-label {
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+/* ===== قسم المصادر ===== */
+.sources-section {
+  position: relative;
+  z-index: 5;
+  background: linear-gradient(180deg, #030203 0%, #0b0806 100%);
+  padding: 6rem 1.5rem 5rem;
+}
+
+.sources-inner {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.sources-section h2 {
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  color: var(--gold);
+  margin-bottom: 1.2rem;
+}
+
+.sources-intro {
+  color: var(--text-dim);
+  line-height: 1.9;
+  font-size: 0.95rem;
+  margin-bottom: 2rem;
+}
+
+.sources-list {
+  padding-inline-start: 1.4rem;
+  margin: 0 0 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.sources-list a {
+  color: var(--sand);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(205, 167, 114, 0.3);
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.sources-list a:hover {
+  color: var(--gold);
+  border-color: var(--gold);
+}
+
+.sources-footer {
+  color: rgba(241, 233, 218, 0.45);
+  font-size: 0.8rem;
+  line-height: 1.8;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 1.5rem;
+}
+
+@media (max-width: 640px) {
+  .chrome {
+    padding: 0.7rem 1rem;
+  }
+  .caption-layer {
+    padding-bottom: 9vh;
+  }
+}
