@@ -53,7 +53,7 @@ export function Wadi() {
       {rocks.map((r) => (
         <mesh key={r.key} position={[r.x, r.y + r.s * 0.5, r.z]} rotation={[0.3, r.rot, 0.15]} castShadow receiveShadow>
           <dodecahedronGeometry args={[r.s, 0]} />
-          <meshStandardMaterial color={0x5c4a34} roughness={1} flatShading />
+          <meshStandardMaterial color={0x92795a} roughness={1} flatShading />
         </mesh>
       ))}
       <group ref={shaftsRef}>

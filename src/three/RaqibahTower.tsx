@@ -41,22 +41,22 @@ export function RaqibahTower() {
       {/* قاعدة صخرية */}
       <mesh position={[TOWER_X, groundY + 1.2, TOWER_Z]} castShadow receiveShadow>
         <coneGeometry args={[6, 3.2, 8]} />
-        <meshStandardMaterial color={0x5a4a38} roughness={1} flatShading />
+        <meshStandardMaterial color={0x8a7255} roughness={1} flatShading />
       </mesh>
       {/* برج الرقيبة: أسطواني حجري */}
       <mesh position={[TOWER_X, groundY + 2.6 + 4, TOWER_Z]} castShadow receiveShadow>
         <cylinderGeometry args={[1.6, 2, 8, 16]} />
-        <meshStandardMaterial color={0x8c7a5e} roughness={0.95} />
+        <meshStandardMaterial color={0xc7a878} roughness={0.9} />
       </mesh>
       {/* شرفة أعلى البرج */}
       <mesh position={[TOWER_X, groundY + 2.6 + 8.6, TOWER_Z]} castShadow>
         <cylinderGeometry args={[2.1, 2.1, 0.6, 16]} />
-        <meshStandardMaterial color={0x6e5c42} roughness={0.9} />
+        <meshStandardMaterial color={0xa4865e} roughness={0.85} />
       </mesh>
       {rocks.map((r) => (
         <mesh key={r.key} position={[r.x, r.y + r.s * 0.4, r.z]} rotation={[0, r.rot, 0]} castShadow receiveShadow>
           <dodecahedronGeometry args={[r.s, 0]} />
-          <meshStandardMaterial color={0x554636} roughness={1} flatShading />
+          <meshStandardMaterial color={0x8c7458} roughness={1} flatShading />
         </mesh>
       ))}
     </group>

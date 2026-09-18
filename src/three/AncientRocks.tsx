@@ -37,7 +37,7 @@ export function AncientRocks() {
       {boulders.map((b) => (
         <mesh key={b.key} position={[b.x, b.y + b.s * 0.4, b.z]} rotation={[0.2, b.rot, 0.1]} castShadow receiveShadow>
           <icosahedronGeometry args={[b.s, 1]} />
-          <meshStandardMaterial color={0x453a2c} roughness={1} flatShading />
+          <meshStandardMaterial color={0x7a6448} roughness={1} flatShading />
         </mesh>
       ))}
     </group>

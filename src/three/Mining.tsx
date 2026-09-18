@@ -9,7 +9,7 @@ const WALL_X = -88;
 const WALL_Z = -280;
 const WALL_LEN = 100; // امتداد الجدار على المحور Z
 
-const STRATA_COLORS = [0x2b241d, 0x3a2f22, 0x4a3a26, 0x5a4630, 0x6b5638];
+const STRATA_COLORS = [0x4a3d2e, 0x5c4a34, 0x6e5a3c, 0x816844, 0x93794e];
 
 export function Mining() {
   const baseY = getTerrainHeight(WALL_X, WALL_Z);

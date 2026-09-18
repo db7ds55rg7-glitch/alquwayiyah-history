@@ -105,15 +105,15 @@ export function Experience() {
 
       {highEnd && (
         <EffectComposer multisampling={0}>
-          <Bloom luminanceThreshold={0.55} luminanceSmoothing={0.3} intensity={0.55} mipmapBlur />
-          <DepthOfField focusDistance={0.02} focalLength={0.045} bokehScale={2.2} />
-          <Vignette eskil={false} offset={0.25} darkness={0.75} />
+          <Bloom luminanceThreshold={0.65} luminanceSmoothing={0.3} intensity={0.4} mipmapBlur />
+          <DepthOfField focusDistance={0.02} focalLength={0.045} bokehScale={1.6} />
+          <Vignette eskil={false} offset={0.35} darkness={0.45} />
         </EffectComposer>
       )}
       {!highEnd && quality === "medium" && (
         <EffectComposer multisampling={0}>
-          <Bloom luminanceThreshold={0.6} intensity={0.4} mipmapBlur />
-          <Vignette eskil={false} offset={0.25} darkness={0.7} />
+          <Bloom luminanceThreshold={0.7} intensity={0.3} mipmapBlur />
+          <Vignette eskil={false} offset={0.35} darkness={0.4} />
         </EffectComposer>
       )}
     </>
