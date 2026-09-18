@@ -13,18 +13,23 @@ export function CaptionLayer() {
 
   useEffect(() => {
     let raf = 0;
+    // نصف عرض التلاشي عند كل حد مشترك بين فصلين متجاورين — تلاشٍ متبادل متماثل
+    // حول نقطة الحد نفسها، بدل أن يبدأ كل فصل تلاشيه من الصفر داخل مداه فقط
+    // (وهو ما كان يترك الفصل الافتتاحي عند بداية الصفحة بلا نص أبدًا لأن t=0
+    // تساوي بداية مداه بالضبط).
+    const HALF_MARGIN = 0.01;
     const tick = () => {
       const t = useJourney.getState().smoothProgress;
       CHAPTERS.forEach((ch, i) => {
         const el = refs.current[i];
         if (!el) return;
         const [a, b] = ch.range;
-        // هامش التلاشي محصور داخل مدى الفصل نفسه حتى لا يتداخل مع الفصل المجاور
-        const margin = Math.min(0.02, (b - a) / 2);
+        const hasPrev = i > 0;
+        const hasNext = i < CHAPTERS.length - 1;
         let factor: number;
         if (t < a || t > b) factor = 0;
-        else if (t < a + margin) factor = smoothstep(t, a, a + margin);
-        else if (t > b - margin) factor = 1 - smoothstep(t, b - margin, b);
+        else if (hasPrev && t < a + HALF_MARGIN) factor = smoothstep(t, a - HALF_MARGIN, a + HALF_MARGIN);
+        else if (hasNext && t > b - HALF_MARGIN) factor = 1 - smoothstep(t, b - HALF_MARGIN, b + HALF_MARGIN);
         else factor = 1;
         el.style.opacity = String(factor);
         el.style.transform = `translateY(${(1 - factor) * 18}px)`;
