@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import * as THREE from "three";
 import { getTerrainHeight } from "./buildJourneyTerrain";
+import { getNoiseTexture } from "./proceduralTexture";
 
 function mulberry32(seed: number) {
   return function () {
@@ -12,9 +13,12 @@ function mulberry32(seed: number) {
   };
 }
 
-const buildingMat = new THREE.MeshStandardMaterial({ color: 0xcfc3a6, roughness: 0.8 });
-
 export function PresentCity() {
+  const buildingMat = useMemo(() => {
+    const noise = getNoiseTexture();
+    return new THREE.MeshStandardMaterial({ color: 0xcfc3a6, roughness: 0.8, roughnessMap: noise, bumpMap: noise, bumpScale: 0.03 });
+  }, []);
+
   const buildings = useMemo(() => {
     const rand = mulberry32(909);
     const out = [];

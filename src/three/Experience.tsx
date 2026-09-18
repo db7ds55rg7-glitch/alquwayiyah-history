@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { EffectComposer, Bloom, Vignette, DepthOfField } from "@react-three/postprocessing";
+import { EffectComposer, Bloom, Vignette, DepthOfField, N8AO, SMAA } from "@react-three/postprocessing";
 import { CameraRig } from "./CameraRig";
 import { Lighting } from "./Lighting";
 import { Terrain } from "./Terrain";
@@ -105,13 +105,32 @@ export function Experience() {
 
       {highEnd && (
         <EffectComposer multisampling={0}>
+          <N8AO
+            aoRadius={2.2}
+            intensity={2}
+            distanceFalloff={1}
+            quality="performance"
+            halfRes
+            aoSamples={8}
+            denoiseSamples={3}
+          />
           <Bloom luminanceThreshold={0.65} luminanceSmoothing={0.3} intensity={0.4} mipmapBlur />
           <DepthOfField focusDistance={0.02} focalLength={0.045} bokehScale={1.6} />
+          <SMAA />
           <Vignette eskil={false} offset={0.35} darkness={0.45} />
         </EffectComposer>
       )}
       {!highEnd && quality === "medium" && (
         <EffectComposer multisampling={0}>
+          <N8AO
+            aoRadius={2}
+            intensity={1.6}
+            distanceFalloff={1}
+            quality="performance"
+            halfRes
+            aoSamples={6}
+            denoiseSamples={2}
+          />
           <Bloom luminanceThreshold={0.7} intensity={0.3} mipmapBlur />
           <Vignette eskil={false} offset={0.35} darkness={0.4} />
         </EffectComposer>

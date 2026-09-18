@@ -2,6 +2,7 @@ import { useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { getTerrainHeight } from "./buildJourneyTerrain";
+import { getNoiseTexture } from "./proceduralTexture";
 
 function mulberry32(seed: number) {
   return function () {
@@ -14,6 +15,18 @@ function mulberry32(seed: number) {
 }
 
 export function Wadi() {
+  const rockMat = useMemo(() => {
+    const noise = getNoiseTexture();
+    return new THREE.MeshStandardMaterial({
+      color: 0x92795a,
+      roughness: 1,
+      roughnessMap: noise,
+      bumpMap: noise,
+      bumpScale: 0.2,
+      flatShading: true,
+    });
+  }, []);
+
   const rocks = useMemo(() => {
     const rand = mulberry32(202);
     const out = [];
@@ -51,9 +64,15 @@ export function Wadi() {
   return (
     <group>
       {rocks.map((r) => (
-        <mesh key={r.key} position={[r.x, r.y + r.s * 0.5, r.z]} rotation={[0.3, r.rot, 0.15]} castShadow receiveShadow>
+        <mesh
+          key={r.key}
+          position={[r.x, r.y + r.s * 0.5, r.z]}
+          rotation={[0.3, r.rot, 0.15]}
+          material={rockMat}
+          castShadow
+          receiveShadow
+        >
           <dodecahedronGeometry args={[r.s, 0]} />
-          <meshStandardMaterial color={0x92795a} roughness={1} flatShading />
         </mesh>
       ))}
       <group ref={shaftsRef}>

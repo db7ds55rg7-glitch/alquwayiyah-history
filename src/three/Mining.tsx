@@ -2,6 +2,7 @@ import { useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { getTerrainHeight } from "./buildJourneyTerrain";
+import { getNoiseTexture } from "./proceduralTexture";
 
 // جدار طبقات جيولوجي رأسي — يقع غربي مسار الكاميرا بمسافة أمان كافية حتى تطير
 // الكاميرا بمحاذاته وتراه كواجهة (وليس أفقيًا من فوقه، فتختفي الطبقات حافةً).
@@ -54,13 +55,27 @@ export function Mining() {
     return out;
   }, [baseY]);
 
+  const strataMats = useMemo(() => {
+    const noise = getNoiseTexture();
+    return STRATA_COLORS.map(
+      (hex) =>
+        new THREE.MeshStandardMaterial({
+          color: hex,
+          roughness: 1,
+          roughnessMap: noise,
+          bumpMap: noise,
+          bumpScale: 0.15,
+          flatShading: true,
+        })
+    );
+  }, []);
+
   return (
     <group>
       {/* واجهة الجدار الصخري بطبقاته */}
       {strataBands.map((s, i) => (
-        <mesh key={i} position={[WALL_X, s.y, WALL_Z]} receiveShadow castShadow>
+        <mesh key={i} position={[WALL_X, s.y, WALL_Z]} material={strataMats[i]} receiveShadow castShadow>
           <boxGeometry args={[4, s.h, WALL_LEN]} />
-          <meshStandardMaterial color={s.color} roughness={1} flatShading />
         </mesh>
       ))}
       <group ref={veinsRef}>

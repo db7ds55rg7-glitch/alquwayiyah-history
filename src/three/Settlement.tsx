@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import * as THREE from "three";
 import { getTerrainHeight } from "./buildJourneyTerrain";
+import { getNoiseTexture } from "./proceduralTexture";
 
 function mulberry32(seed: number) {
   return function () {
@@ -92,16 +93,43 @@ export function ClayHouses({
     [seed, centerX, centerZ, radius, count, spacing]
   );
 
-  const bodyMaterials = useMemo(
-    () => CLAY_TONES.map((hex) => new THREE.MeshStandardMaterial({ color: hex, roughness: 0.95, flatShading: true })),
-    []
-  );
-  const roofMat = useMemo(() => new THREE.MeshStandardMaterial({ color: roofColor, roughness: 0.9, flatShading: true }), []);
+  const bodyMaterials = useMemo(() => {
+    const noise = getNoiseTexture();
+    return CLAY_TONES.map(
+      (hex) =>
+        new THREE.MeshStandardMaterial({
+          color: hex,
+          roughness: 0.95,
+          roughnessMap: noise,
+          bumpMap: noise,
+          bumpScale: 0.12,
+          flatShading: true,
+        })
+    );
+  }, []);
+  const roofMat = useMemo(() => {
+    const noise = getNoiseTexture();
+    return new THREE.MeshStandardMaterial({
+      color: roofColor,
+      roughness: 0.9,
+      roughnessMap: noise,
+      bumpMap: noise,
+      bumpScale: 0.08,
+      flatShading: true,
+    });
+  }, []);
   const doorMat = useMemo(() => new THREE.MeshStandardMaterial({ color: doorColor, roughness: 0.8 }), []);
-  const towerMat = useMemo(
-    () => new THREE.MeshStandardMaterial({ color: 0xa88250, roughness: 0.9, flatShading: true }),
-    []
-  );
+  const towerMat = useMemo(() => {
+    const noise = getNoiseTexture();
+    return new THREE.MeshStandardMaterial({
+      color: 0xa88250,
+      roughness: 0.9,
+      roughnessMap: noise,
+      bumpMap: noise,
+      bumpScale: 0.1,
+      flatShading: true,
+    });
+  }, []);
 
   const wallPoints = useMemo(() => {
     if (!wall) return [];

@@ -1,5 +1,7 @@
 import { useMemo } from "react";
+import * as THREE from "three";
 import { getTerrainHeight } from "./buildJourneyTerrain";
+import { getNoiseTexture } from "./proceduralTexture";
 
 function mulberry32(seed: number) {
   return function () {
@@ -32,12 +34,30 @@ export function AncientRocks() {
     return out;
   }, []);
 
+  const rockMat = useMemo(() => {
+    const noise = getNoiseTexture();
+    return new THREE.MeshStandardMaterial({
+      color: 0x7a6448,
+      roughness: 1,
+      roughnessMap: noise,
+      bumpMap: noise,
+      bumpScale: 0.2,
+      flatShading: true,
+    });
+  }, []);
+
   return (
     <group>
       {boulders.map((b) => (
-        <mesh key={b.key} position={[b.x, b.y + b.s * 0.4, b.z]} rotation={[0.2, b.rot, 0.1]} castShadow receiveShadow>
+        <mesh
+          key={b.key}
+          position={[b.x, b.y + b.s * 0.4, b.z]}
+          rotation={[0.2, b.rot, 0.1]}
+          material={rockMat}
+          castShadow
+          receiveShadow
+        >
           <icosahedronGeometry args={[b.s, 1]} />
-          <meshStandardMaterial color={0x7a6448} roughness={1} flatShading />
         </mesh>
       ))}
     </group>

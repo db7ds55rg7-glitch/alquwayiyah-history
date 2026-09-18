@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import * as THREE from "three";
 import { getTerrainHeight } from "./buildJourneyTerrain";
+import { getNoiseTexture } from "./proceduralTexture";
 
 const TOWER_X = 40;
 const TOWER_Z = -34;
@@ -36,27 +37,48 @@ export function RaqibahTower() {
     });
   }, []);
 
+  const noise = useMemo(() => getNoiseTexture(), []);
+  const baseMat = useMemo(
+    () => new THREE.MeshStandardMaterial({ color: 0x8a7255, roughness: 1, roughnessMap: noise, bumpMap: noise, bumpScale: 0.15, flatShading: true }),
+    [noise]
+  );
+  const wallMat = useMemo(
+    () => new THREE.MeshStandardMaterial({ color: 0xc7a878, roughness: 0.9, roughnessMap: noise, bumpMap: noise, bumpScale: 0.1 }),
+    [noise]
+  );
+  const capMat = useMemo(
+    () => new THREE.MeshStandardMaterial({ color: 0xa4865e, roughness: 0.85, roughnessMap: noise, bumpMap: noise, bumpScale: 0.08 }),
+    [noise]
+  );
+  const rockMat = useMemo(
+    () => new THREE.MeshStandardMaterial({ color: 0x8c7458, roughness: 1, roughnessMap: noise, bumpMap: noise, bumpScale: 0.18, flatShading: true }),
+    [noise]
+  );
+
   return (
     <group>
       {/* قاعدة صخرية */}
-      <mesh position={[TOWER_X, groundY + 1.2, TOWER_Z]} castShadow receiveShadow>
+      <mesh position={[TOWER_X, groundY + 1.2, TOWER_Z]} material={baseMat} castShadow receiveShadow>
         <coneGeometry args={[6, 3.2, 8]} />
-        <meshStandardMaterial color={0x8a7255} roughness={1} flatShading />
       </mesh>
       {/* برج الرقيبة: أسطواني حجري */}
-      <mesh position={[TOWER_X, groundY + 2.6 + 4, TOWER_Z]} castShadow receiveShadow>
+      <mesh position={[TOWER_X, groundY + 2.6 + 4, TOWER_Z]} material={wallMat} castShadow receiveShadow>
         <cylinderGeometry args={[1.6, 2, 8, 16]} />
-        <meshStandardMaterial color={0xc7a878} roughness={0.9} />
       </mesh>
       {/* شرفة أعلى البرج */}
-      <mesh position={[TOWER_X, groundY + 2.6 + 8.6, TOWER_Z]} castShadow>
+      <mesh position={[TOWER_X, groundY + 2.6 + 8.6, TOWER_Z]} material={capMat} castShadow>
         <cylinderGeometry args={[2.1, 2.1, 0.6, 16]} />
-        <meshStandardMaterial color={0xa4865e} roughness={0.85} />
       </mesh>
       {rocks.map((r) => (
-        <mesh key={r.key} position={[r.x, r.y + r.s * 0.4, r.z]} rotation={[0, r.rot, 0]} castShadow receiveShadow>
+        <mesh
+          key={r.key}
+          position={[r.x, r.y + r.s * 0.4, r.z]}
+          rotation={[0, r.rot, 0]}
+          material={rockMat}
+          castShadow
+          receiveShadow
+        >
           <dodecahedronGeometry args={[r.s, 0]} />
-          <meshStandardMaterial color={0x8c7458} roughness={1} flatShading />
         </mesh>
       ))}
     </group>
