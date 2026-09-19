@@ -2,7 +2,7 @@ import raqibahTower from "../assets/photos/raqibah-tower.jpg";
 import quwayiyahAerial from "../assets/photos/quwayiyah-aerial.jpg";
 import quwayiyahPark from "../assets/photos/quwayiyah-park.jpg";
 import wadiMountains from "../assets/photos/wadi-mountains.jpg";
-import wadiFlowers from "../assets/photos/wadi-flowers.jpg";
+import wadiBloom from "../assets/photos/wadi-bloom.jpg";
 
 export interface PhotoMoment {
   id: string;
@@ -29,7 +29,7 @@ export const PHOTO_MOMENTS: PhotoMoment[] = [
   },
   {
     id: "wadi-photo-2",
-    src: wadiFlowers,
+    src: wadiBloom,
     range: [0.604, 0.618],
     caption: "الغطاء النباتي الموسمي في جبال المنطقة",
   },
