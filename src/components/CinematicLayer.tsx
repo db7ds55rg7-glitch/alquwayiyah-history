@@ -3,6 +3,7 @@ import { Canvas } from "@react-three/fiber";
 import * as THREE from "three";
 import { Experience } from "../three/Experience";
 import { CaptionLayer } from "./CaptionLayer";
+import { PhotoLayer } from "./PhotoLayer";
 import { Chrome } from "./Chrome";
 import { useJourney } from "../store/useJourney";
 
@@ -44,6 +45,7 @@ export function CinematicLayer() {
         <Experience />
       </Canvas>
       <CaptionLayer />
+      <PhotoLayer />
       <Chrome />
     </div>
   );
