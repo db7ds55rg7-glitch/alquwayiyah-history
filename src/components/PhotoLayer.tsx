@@ -11,10 +11,15 @@ function smoothstep(x: number, a: number, b: number) {
 /**
  * لقطات توثيقية حقيقية تقتحم المشهد ثلاثي الأبعاد للحظات قصيرة — صور فعلية
  * أرسلها المستخدم، تُعرض بتأثير سينمائي (تكبير بطيء + تلاشٍ) ثم تعود للمشهد.
+ *
+ * كل صورة تُعرض بطبقتين: خلفية مموَّهة (object-fit: cover) تملأ الشاشة كاملة،
+ * وصورة حادة فوقها (object-fit: contain) تُظهر الإطار كاملًا دون قص أطرافه —
+ * ضروري على الشاشات الطولية (الجوال) حيث تكون أغلب الصور بانورامية عريضة.
  */
 export function PhotoLayer() {
   const refs = useRef<(HTMLDivElement | null)[]>([]);
-  const imgRefs = useRef<(HTMLImageElement | null)[]>([]);
+  const fgRefs = useRef<(HTMLImageElement | null)[]>([]);
+  const bgRefs = useRef<(HTMLImageElement | null)[]>([]);
 
   useEffect(() => {
     let raf = 0;
@@ -23,8 +28,9 @@ export function PhotoLayer() {
       const t = useJourney.getState().smoothProgress;
       PHOTO_MOMENTS.forEach((p, i) => {
         const el = refs.current[i];
-        const img = imgRefs.current[i];
-        if (!el || !img) return;
+        const fg = fgRefs.current[i];
+        const bg = bgRefs.current[i];
+        if (!el || !fg || !bg) return;
         const [a, b] = p.range;
         let factor: number;
         if (t < a || t > b) factor = 0;
@@ -38,8 +44,8 @@ export function PhotoLayer() {
 
         // تكبير بطيء (Ken Burns) طوال مدة ظهور الصورة
         const localT = Math.min(Math.max((t - a) / (b - a || 1), 0), 1);
-        const scale = 1.04 + localT * 0.07;
-        img.style.transform = `scale(${scale})`;
+        fg.style.transform = `scale(${1.0 + localT * 0.05})`;
+        bg.style.transform = `scale(${1.12 + localT * 0.06})`;
       });
       raf = requestAnimationFrame(tick);
     };
@@ -60,8 +66,18 @@ export function PhotoLayer() {
         >
           <img
             ref={(el) => {
-              imgRefs.current[i] = el;
+              bgRefs.current[i] = el;
             }}
+            className="photo-bg"
+            src={p.src}
+            alt=""
+            aria-hidden="true"
+          />
+          <img
+            ref={(el) => {
+              fgRefs.current[i] = el;
+            }}
+            className="photo-fg"
             src={p.src}
             alt={p.caption}
           />

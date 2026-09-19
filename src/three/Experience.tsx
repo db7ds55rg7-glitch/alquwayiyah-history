@@ -28,6 +28,9 @@ const HILLAH_PATH = pathPointsFor("hillah");
 export function Experience() {
   const quality = useJourney((s) => s.quality);
   const highEnd = quality === "high";
+  // عدد المباني الإجرائية يتناسب مع فئة أداء الجهاز — كل بيت شبكة إضافية
+  // (ظلال + خرائط ضجيج) وعشرات منها تتراكم على الأجهزة الأضعف
+  const houseMul = quality === "low" ? 0.35 : quality === "medium" ? 0.6 : 1;
 
   return (
     <>
@@ -49,7 +52,7 @@ export function Experience() {
           centerX={-6}
           centerZ={-14}
           radius={26}
-          count={70}
+          count={Math.round(70 * houseMul)}
           spacing={5}
           avoid={GHASAYBAH_PATH}
         />
@@ -61,7 +64,7 @@ export function Experience() {
           centerX={-30}
           centerZ={-10}
           radius={24}
-          count={60}
+          count={Math.round(60 * houseMul)}
           spacing={5.5}
           wall
           towerCorners
@@ -75,7 +78,7 @@ export function Experience() {
           centerX={30}
           centerZ={-32}
           radius={18}
-          count={40}
+          count={Math.round(40 * houseMul)}
           spacing={4.8}
           avoid={HILLAH_PATH}
         />
@@ -122,15 +125,6 @@ export function Experience() {
       )}
       {!highEnd && quality === "medium" && (
         <EffectComposer multisampling={0}>
-          <N8AO
-            aoRadius={2}
-            intensity={1.6}
-            distanceFalloff={1}
-            quality="performance"
-            halfRes
-            aoSamples={6}
-            denoiseSamples={2}
-          />
           <Bloom luminanceThreshold={0.7} intensity={0.3} mipmapBlur />
           <Vignette eskil={false} offset={0.35} darkness={0.4} />
         </EffectComposer>

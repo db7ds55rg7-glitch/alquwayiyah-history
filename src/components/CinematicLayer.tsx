@@ -28,12 +28,12 @@ export function CinematicLayer() {
     return () => cancelAnimationFrame(raf);
   }, []);
 
-  const dpr: [number, number] = quality === "high" ? [1, 2] : quality === "medium" ? [1, 1.5] : [1, 1];
+  const dpr: [number, number] = quality === "high" ? [1, 2] : quality === "medium" ? [1, 1.25] : [1, 1];
 
   return (
     <div ref={wrapRef} className="cinematic-layer">
       <Canvas
-        shadows={quality !== "low" ? { type: THREE.PCFShadowMap } : false}
+        shadows={quality === "high" ? { type: THREE.PCFShadowMap } : false}
         dpr={dpr}
         gl={{ antialias: false, powerPreference: "high-performance" }}
         camera={{ fov: 45, near: 0.1, far: 900 }}
